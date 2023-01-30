@@ -3,6 +3,7 @@
 
 const express = require("express");
 const User = require("../models/usermodel");
+const jwt = require("jsonwebtoken")
 
 const authRouter = express.Router();
 
@@ -24,10 +25,18 @@ authRouter.post('/api/signup', async (req, res) => {
             user = await user.save();
         }
         
-        res.json({user});
+        //randomize secured token
+      const token =  jwt.sign({id: user._id});
+
+        res.json({user , token});
     } catch (e){
         res.status(500).json({error: e.message});
     }
+});
+//auth middleware
+
+authRouter.get('/',auth, async( req, res) => {
+
 });
 
 module.exports = authRouter;
